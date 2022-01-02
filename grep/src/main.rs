@@ -1,13 +1,13 @@
 use std::fs::read_to_string;
 
-struct GrapeArgs {
+struct GrepArgs {
     path: String,
     pattern: String,
 }
 
-impl GrapeArgs {
-    fn new(pattern: String, path: String) -> GrapeArgs {
-        GrapeArgs { path, pattern }
+impl GrepArgs {
+    fn new(pattern: String, path: String) -> GrepArgs {
+        GrepArgs { path, pattern }
     }
 }
 
@@ -19,7 +19,7 @@ fn grep(content: String, pattern: String) {
     }
 }
 
-fn run(state: GrapeArgs) {
+fn run(state: GrepArgs) {
     match read_to_string(state.path) {
         Ok(content) => grep(content, state.pattern),
         Err(reason) => println!("{}", reason),
@@ -31,7 +31,7 @@ fn main() {
     let path = std::env::args().nth(2);
 
     match (pattern, path) {
-        (Some(pattern), Some(path)) => run(GrapeArgs::new(pattern, path)),
+        (Some(pattern), Some(path)) => run(GrepArgs::new(pattern, path)),
         _ => println!("pattern or path is not specified!"),
     }
 }
