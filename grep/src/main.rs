@@ -16,10 +16,10 @@ struct GrepArgs {
 //     }
 // }
 
-fn grep(content: String, pattern: &String) {
+fn grep(content: &str, pattern: &str, path: &str) {
     for line in content.lines() {
-        if line.contains(pattern.as_str()) {
-            println!("{}", line);
+        if line.contains(pattern) {
+            println!("{}: {}", line, path);
         }
     }
 }
@@ -27,7 +27,7 @@ fn grep(content: String, pattern: &String) {
 fn run(state: GrepArgs) {
     for path in state.path.iter() {
         match read_to_string(path) {
-            Ok(content) => grep(content, &state.pattern),
+            Ok(content) => grep(&content, &state.pattern, &path),
             Err(reason) => println!("{}", reason),
         }
     }
