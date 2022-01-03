@@ -18,9 +18,9 @@ struct GrepArgs {
 // }
 
 fn grep(content: &str, pattern: &str, path: &str) {
-    for line in content.lines() {
+    for (i, line) in content.lines().enumerate() {
         if line.contains(pattern) {
-            println!("{}: {}", line, path);
+            println!("{}: {}:{}", line, path, i + 1);
         }
     }
 }
