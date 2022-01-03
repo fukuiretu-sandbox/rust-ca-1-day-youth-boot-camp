@@ -1,17 +1,22 @@
 use std::fs::read_to_string;
+use structopt::StructOpt;
 
+#[derive(StructOpt)]
+#[structopt(name = "rsgrep")]
 struct GrepArgs {
-    path: String,
+    #[structopt(name = "PATTERN")]
     pattern: String,
+    #[structopt(name = "FILE")]
+    path: Vec<String>,
 }
 
-impl GrepArgs {
-    fn new(pattern: String, path: String) -> GrepArgs {
-        GrepArgs { path, pattern }
-    }
-}
+// impl GrepArgs {
+//     fn new(pattern: String, path: String) -> GrepArgs {
+//         GrepArgs { path, pattern }
+//     }
+// }
 
-fn grep(content: String, pattern: String) {
+fn grep(content: String, pattern: &String) {
     for line in content.lines() {
         if line.contains(pattern.as_str()) {
             println!("{}", line);
@@ -20,18 +25,21 @@ fn grep(content: String, pattern: String) {
 }
 
 fn run(state: GrepArgs) {
-    match read_to_string(state.path) {
-        Ok(content) => grep(content, state.pattern),
-        Err(reason) => println!("{}", reason),
+    for path in state.path.iter() {
+        match read_to_string(path) {
+            Ok(content) => grep(content, &state.pattern),
+            Err(reason) => println!("{}", reason),
+        }
     }
 }
 
 fn main() {
-    let pattern = std::env::args().nth(1);
-    let path = std::env::args().nth(2);
+    // let pattern = std::env::args().nth(1);
+    // let path = std::env::args().nth(2);
 
-    match (pattern, path) {
-        (Some(pattern), Some(path)) => run(GrepArgs::new(pattern, path)),
-        _ => println!("pattern or path is not specified!"),
-    }
+    // match (pattern, path) {
+    //     (Some(pattern), Some(path)) => run(GrepArgs::new(pattern, path)),
+    //     _ => println!("pattern or path is not specified!"),
+    // }
+    run(GrepArgs::from_args());
 }
